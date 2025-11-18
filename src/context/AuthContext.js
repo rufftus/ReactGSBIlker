@@ -5,13 +5,13 @@ const AuthContext = createContext();
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
 
+  // Simule une vraie connexion
   const loginUser = (login, password) => {
     if (login === "Andre" && password === "secret") {
       setUser(login);
       return true;
-    } else {
-      return false;
     }
+    return false;
   };
 
   const logoutUser = () => {
@@ -28,5 +28,3 @@ export function AuthProvider({ children }) {
 export function useAuth() {
   return useContext(AuthContext);
 }
-
-
