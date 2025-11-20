@@ -10,14 +10,19 @@ export default function Login() {
     const { loginUser } = useAuth();
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async(e) => {
         e.preventDefault();
 
-        if (loginUser(login, password)) {
+
+        try{
+            await loginUser(login, password);
             navigate('/dashboard');
-        } else {
-            alert('Identifiants incorrects');
         }
+        catch(err)
+        {console.error(err);
+         alert("echec de la connexion");
+        }
+        
     };
 
     return (

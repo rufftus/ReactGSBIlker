@@ -6,7 +6,9 @@ export default function Dashboard() {
 
     return (
         <div>
-            <h1>Bienvenue {user}</h1>
+            <h1>
+                Bienvenue {user?.nom_visiteur}
+            </h1>
             <FraisTable />
         </div>
     );
