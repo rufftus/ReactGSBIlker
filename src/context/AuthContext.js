@@ -14,9 +14,9 @@ export function AuthProvider({ children }) {
     if (user && token) {
       setUser(user);
       setToken(token);
-      
+      setLoading(false);
     }
-    setLoading(false);
+    
   }, []);
 
 

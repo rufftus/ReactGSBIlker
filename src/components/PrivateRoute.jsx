@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom';
 
 export default function PrivateRoute({ children }) {
     const {token,loading} = useAuth();
-    if(loading===true){
+    if(loading){
 
         return <div>Chargement.....</div>;
     }
