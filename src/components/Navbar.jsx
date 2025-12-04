@@ -12,7 +12,14 @@ function Navbar() {
         <div className="nav-left">
           <span className="logo">GSB Frais</span>
           <Link to="/" className="nav-link">Accueil</Link>
-          {user && <Link to="/dashboard" className="nav-link">Tableau de bord</Link>}
+          
+          {user && (
+            <>
+                <Link to="/dashboard" className="nav-link">Tableau de bord</Link>
+                {/* Lien corrigé avec la bonne classe CSS */}
+                <Link to="/frais/ajouter" className="nav-link">Ajouter Frais</Link>
+            </>
+          )}
         </div>
 
         <div className="nav-right">

@@ -1,19 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { API_URL } from "../services/authService";
-
 import axios from "axios";
 import { useAuth } from '../context/AuthContext';
+// 1. IMPORT NÉCESSAIRE POUR LA NAVIGATION
+import { useNavigate } from 'react-router-dom'; 
 import "../styles/FraisTable.css";
 
-// TODO (question 3): déclarer un composant fonctionnel FraisTable
 function FraisTable() {
   const { user, token } = useAuth();
-  // TODO (question 4): Déclarer l'état 'frais' avec useState
+  
+  // 2. DÉCLARATION DU HOOK DE NAVIGATION
+  const navigate = useNavigate();
+
   const [fraisList, setFraisList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const[filterNonNull,setFilterNonNull]=useState(true);
-  const[minMontant, setMinMontant] = useState("");
+  const [filterNonNull, setFilterNonNull] = useState(false); 
+  const [minMontant, setMinMontant] = useState("");
 
   useEffect(() => {
     const fetchFrais = async () => {
@@ -22,24 +25,19 @@ function FraisTable() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        });// Requête get à l'API à l'url
-  //'http://gsb.julliand.etu.lmdsio.com/api/frais/liste/{id_visiteur}'
-
+        });
+        
         setFraisList(response.data);
-        // TODO : Met à jour l'état avec les données de l'API
-
         setLoading(false);
-        // TODO : Met fin à l'état de chargement
 
-        } catch (error) {
-          console.error('Erreur lors de la récupération des frais:', error);
-          setLoading(false);
-          // TODO : Arrête le chargement même en cas d'erreur
-        }
+      } catch (error) {
+        console.error('Erreur lors de la récupération des frais:', error);
+        setLoading(false);
+      }
     };
 
-    fetchFrais(); // Appelle la fonction pour récupérer les données
-  }, []); // Tableau de dépendances vide = exécute une seule fois
+    fetchFrais(); 
+  }, [user, token]); 
 
 
   if (loading) return <div><b>Chargement des frais....</b></div>
@@ -51,23 +49,22 @@ function FraisTable() {
       frais.anneemois.includes(searchTerm) ||
       frais.id_visiteur.toString().includes(searchTerm))
     .filter((f) =>
-    minMontant==="" || (f.montantvalide !== null && f.montantvalide > Number(minMontant)));
+      minMontant === "" || (f.montantvalide !== null && f.montantvalide > Number(minMontant)));
 
   return (
     <>
+      <div className="filter-container">
+        <label>
+          <input
+            type="checkbox"
+            checked={filterNonNull}
+            onChange={(e) => setFilterNonNull(e.target.checked)}
+          />
+          Afficher seulement les frais avec un montant validé
+        </label>
+      </div>
 
-    <div className="filter-container">
-      <label>
-        <input
-        type="checkbox"
-        checked={filterNonNull}
-        onChange={(e) =>setFilterNonNull(e.target.checked)}
-        />
-        Afficher seulement les frais avec un montant validé
-      </label>
-    </div>
-
-          <div className="filter-min-montant">
+      <div className="filter-min-montant">
         <label>
           Montant validé minimum :{" "}
           <input
@@ -86,7 +83,7 @@ function FraisTable() {
           type="text"
           placeholder="Rechercher par année-mois, ID visiteur ou montant..."
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)} // Met à jour searchTerm
+          onChange={(e) => setSearchTerm(e.target.value)} 
         />
       </div>
 
@@ -100,10 +97,11 @@ function FraisTable() {
               <th>ID Etat</th>
               <th>Année-Mois</th>
               <th>ID Visiteur</th>
-              <th>Nombres de Justificatifs</th>
-              <th>Date de modification</th>
+              <th>Nb Justificatifs</th>
+              <th>Date modif.</th>
               <th>Montant saisi</th>
               <th>Montant validé</th>
+              <th>Action</th>
             </tr>
           </thead>
 
@@ -116,8 +114,19 @@ function FraisTable() {
                 <td>{frais.id_visiteur}</td>
                 <td>{frais.nbjustificatifs}</td>
                 <td>{frais.datemodification}</td>
-                <td>{/* Montant saisi vide pour l'instant */}</td>
-                <td>{frais.montantvalide}</td>
+
+                <td>{frais.montant} €</td> 
+
+                <td>{frais.montantvalide || frais.montant} </td>
+
+                <td>
+                  <button 
+                    onClick={() => navigate(`/frais/modifier/${frais.id_frais}`)}
+                    className="edit-button"
+                  >
+                    Modifier
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>

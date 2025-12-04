@@ -5,6 +5,8 @@ import Dashboard from './pages/Dashboard';
 import Navbar from './components/Navbar';
 import { AuthProvider } from './context/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
+import FraisAdd from './pages/FraisAdd';
+import FraisEdit from './pages/FraisEdit.jsx';
 
 function App() {
   return (
@@ -16,7 +18,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
 
-          {/* Route protégée */}
+          {/* Routes Protégées */}
           <Route
             path="/dashboard"
             element={
@@ -25,6 +27,19 @@ function App() {
               </PrivateRoute>
             }
           />
+          
+          {/* Ajout sécurisé de la route FraisAdd */}
+          <Route 
+            path="/frais/ajouter" 
+            element={
+                <PrivateRoute>
+                    <FraisAdd/>
+                </PrivateRoute>
+            }
+          />
+
+          <Route path="/frais/modifier/:id" element={<FraisEdit />} />
+
         </Routes>
       </BrowserRouter>
     </AuthProvider>
