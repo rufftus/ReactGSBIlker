@@ -39,7 +39,7 @@ function FraisTable() {
     };
 
     fetchFrais(); // Appelle la fonction pour récupérer les données
-  }, [user,token]); // Tableau de dépendances vide = exécute une seule fois
+  }, []); // Tableau de dépendances vide = exécute une seule fois
 
 
   if (loading) return <div><b>Chargement des frais....</b></div>
@@ -109,8 +109,8 @@ function FraisTable() {
 
           <tbody>
             {filteredFrais.map((frais) => (
-              <tr key={frais.id}>
-                <td>{frais.id}</td>
+              <tr key={frais.id_frais}>
+                <td>{frais.id_frais}</td>
                 <td>{frais.id_etat}</td>
                 <td>{frais.anneemois}</td>
                 <td>{frais.id_visiteur}</td>
