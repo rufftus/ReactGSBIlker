@@ -5,21 +5,23 @@ const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const[token,setToken]=useState(null);
-  const[loading, setLoading]=useState(true);
+  const [token, setToken] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const user = getCurrentUser();
-    const token = getAuthToken();
-    if (user && token) {
-      setUser(user);
-      setToken(token);
-      setLoading(false);
+    const recoveredUser = getCurrentUser(); // Renommé pour éviter la confusion avec le state 'user'
+    const recoveredToken = getAuthToken();
+
+    if (recoveredUser && recoveredToken) {
+      setUser(recoveredUser);
+      setToken(recoveredToken);
     }
     
+    // IMPORTANT : On arrête le chargement dans tous les cas, 
+    // qu'on ait trouvé un utilisateur ou non.
+    setLoading(false); 
+    
   }, []);
-
-
 
   const loginUser = async (login, password) => {
     const data = await signIn(login, password);
