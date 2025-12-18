@@ -2,14 +2,11 @@ import React, { useState, useEffect } from "react";
 import { API_URL } from "../services/authService";
 import axios from "axios";
 import { useAuth } from '../context/AuthContext';
-// 1. IMPORT NÉCESSAIRE POUR LA NAVIGATION
 import { useNavigate } from 'react-router-dom'; 
 import "../styles/FraisTable.css";
 
 function FraisTable() {
   const { user, token } = useAuth();
-  
-  // 2. DÉCLARATION DU HOOK DE NAVIGATION
   const navigate = useNavigate();
 
   const [fraisList, setFraisList] = useState([]);
@@ -22,26 +19,37 @@ function FraisTable() {
     const fetchFrais = async () => {
       try {
         const response = await axios.get(`${API_URL}frais/liste/${user.id_visiteur}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
-        
         setFraisList(response.data);
         setLoading(false);
-
       } catch (error) {
         console.error('Erreur lors de la récupération des frais:', error);
         setLoading(false);
       }
     };
-
     fetchFrais(); 
   }, [user, token]); 
 
+  // Fonction de suppression corrigée
+  const handleDelete = async (id) => {
+      if (!window.confirm('Êtes-vous sûr de vouloir supprimer ce frais?')) return;
+
+      try {
+          await axios.delete(`${API_URL}frais/suppr`, {
+              headers: { Authorization: `Bearer ${token}` },
+              data: { id_frais: id } // Le corps de la requête DELETE
+          });
+          
+          // Mise à jour locale de la liste
+          setFraisList(fraisList.filter((frais) => frais.id_frais !== id));
+      } catch (error) {
+          console.error('Erreur lors de la suppression:', error);
+          alert("Erreur lors de la suppression du frais");
+      }
+  };
 
   if (loading) return <div><b>Chargement des frais....</b></div>
-
 
   const filteredFrais = fraisList
     .filter((f) => !filterNonNull || f.montantvalide !== null)
@@ -77,11 +85,10 @@ function FraisTable() {
         </label>
       </div>
 
-
       <div className="search-container">
         <input
           type="text"
-          placeholder="Rechercher par année-mois, ID visiteur ou montant..."
+          placeholder="Rechercher par année-mois..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)} 
         />
@@ -97,11 +104,10 @@ function FraisTable() {
               <th>ID Etat</th>
               <th>Année-Mois</th>
               <th>ID Visiteur</th>
-              <th>Nb Justificatifs</th>
-              <th>Date modif.</th>
+              <th>Nb Justif.</th>
               <th>Montant saisi</th>
               <th>Montant validé</th>
-              <th>Action</th>
+              <th>Actions</th>
             </tr>
           </thead>
 
@@ -113,11 +119,8 @@ function FraisTable() {
                 <td>{frais.anneemois}</td>
                 <td>{frais.id_visiteur}</td>
                 <td>{frais.nbjustificatifs}</td>
-                <td>{frais.datemodification}</td>
-
                 <td>{frais.montant} €</td> 
-
-                <td>{frais.montantvalide || frais.montant} </td>
+                <td>{frais.montantvalide || '-'} </td>
 
                 <td>
                   <button 
@@ -125,6 +128,14 @@ function FraisTable() {
                     className="edit-button"
                   >
                     Modifier
+                  </button>
+                  
+                  <button 
+                    onClick={() => handleDelete(frais.id_frais)}
+                    className="delete-button"
+                    style={{ marginLeft: '5px', backgroundColor: '#dc3545', color: 'white' }}
+                  >
+                    Supprimer
                   </button>
                 </td>
               </tr>

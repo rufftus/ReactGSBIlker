@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { API_URL, getCurrentUser } from '../services/authService';
 import '../styles/FraisForm.css'; 
 
-const FraisForm = () => {
+const FraisForm = ({ frais = null }) => {
+    // États locaux
+    const [idFrais, setIdFrais] = useState(null);
     const [anneeMois, setAnneeMois] = useState("");
     const [nbJustificatifs, setNbJustificatifs] = useState("");
     const [montant, setMontant] = useState("");
@@ -13,6 +15,16 @@ const FraisForm = () => {
 
     const navigate = useNavigate();
 
+    // Pré-remplir le formulaire si on modifie un frais existant
+    useEffect(() => {
+        if (frais) {
+            setIdFrais(frais.id_frais);
+            setAnneeMois(frais.anneemois);
+            setNbJustificatifs(frais.nbjustificatifs);
+            setMontant(frais.montantvalide || frais.montant || '');
+        }
+    }, [frais]);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -20,24 +32,37 @@ const FraisForm = () => {
 
         try {
             const token = localStorage.getItem('token');
-            if (!token) {
-                throw new Error("Token introuvable, vous devez être connecté.");
-            }
+            if (!token) throw new Error("Token manquant");
 
+            const user = getCurrentUser();
+
+            // Données communes aux deux cas
             const fraisData = {
                 anneemois: anneeMois,
                 nbjustificatifs: parseInt(nbJustificatifs, 10),
-                montant: parseFloat(montant), // Ajout de parseFloat pour assurer le format numérique
-                id_visiteur: getCurrentUser()["id_visiteur"]
+                id_visiteur: user["id_visiteur"]
             };
 
-            const response = await axios.post(`${API_URL}frais/ajout`, fraisData, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                },
-            });
+            if (frais) {
+                // --- CAS MODIFICATION (UPDATE) ---
+                fraisData["id_frais"] = idFrais;
+                fraisData["montantvalide"] = parseFloat(montant);
+                // On garde l'état existant s'il est présent
+                fraisData["id_etat"] = frais.id_etat; 
 
-            console.log("Réponse API:", response);
+                await axios.post(`${API_URL}frais/modif`, fraisData, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+
+            } else {
+                // --- CAS AJOUT (CREATE) ---
+                fraisData["montant"] = parseFloat(montant);
+
+                await axios.post(`${API_URL}frais/ajout`, fraisData, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+            }
+
             navigate('/dashboard');
 
         } catch (err) {
@@ -54,7 +79,7 @@ const FraisForm = () => {
 
     return (
         <div className="frais-form-container">
-            <h3>Ajouter une note de frais</h3>
+            <h3>{frais ? 'Modifier le frais' : 'Saisir un frais'}</h3>
             
             {error && <div className="error-message">{error}</div>}
 
@@ -85,7 +110,7 @@ const FraisForm = () => {
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="montant">Montant total (€) :</label>
+                    <label htmlFor="montant">Montant (€) :</label>
                     <input
                         type="number"
                         id="montant"
@@ -98,7 +123,7 @@ const FraisForm = () => {
                 </div>
 
                 <button type="submit" className="btn-submit" disabled={loading}>
-                    {loading ? 'Enregistrement...' : 'Ajouter'}
+                    {loading ? 'Enregistrement...' : (frais ? 'Mettre à jour' : 'Ajouter')}
                 </button>
             </form>
         </div>
