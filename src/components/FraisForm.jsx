@@ -5,7 +5,6 @@ import { API_URL, getCurrentUser } from '../services/authService';
 import '../styles/FraisForm.css'; 
 
 const FraisForm = ({ frais = null }) => {
-    // États locaux
     const [idFrais, setIdFrais] = useState(null);
     const [anneeMois, setAnneeMois] = useState("");
     const [nbJustificatifs, setNbJustificatifs] = useState("");
@@ -15,7 +14,6 @@ const FraisForm = ({ frais = null }) => {
 
     const navigate = useNavigate();
 
-    // Pré-remplir le formulaire si on modifie un frais existant
     useEffect(() => {
         if (frais) {
             setIdFrais(frais.id_frais);
@@ -36,7 +34,6 @@ const FraisForm = ({ frais = null }) => {
 
             const user = getCurrentUser();
 
-            // Données communes aux deux cas
             const fraisData = {
                 anneemois: anneeMois,
                 nbjustificatifs: parseInt(nbJustificatifs, 10),
@@ -44,10 +41,8 @@ const FraisForm = ({ frais = null }) => {
             };
 
             if (frais) {
-                // --- CAS MODIFICATION (UPDATE) ---
                 fraisData["id_frais"] = idFrais;
                 fraisData["montantvalide"] = parseFloat(montant);
-                // On garde l'état existant s'il est présent
                 fraisData["id_etat"] = frais.id_etat; 
 
                 await axios.post(`${API_URL}frais/modif`, fraisData, {
@@ -55,7 +50,6 @@ const FraisForm = ({ frais = null }) => {
                 });
 
             } else {
-                // --- CAS AJOUT (CREATE) ---
                 fraisData["montant"] = parseFloat(montant);
 
                 await axios.post(`${API_URL}frais/ajout`, fraisData, {

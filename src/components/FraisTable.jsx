@@ -31,7 +31,6 @@ function FraisTable() {
     fetchFrais(); 
   }, [user, token]); 
 
-  // Fonction de suppression corrigée
   const handleDelete = async (id) => {
       if (!window.confirm('Êtes-vous sûr de vouloir supprimer ce frais?')) return;
 

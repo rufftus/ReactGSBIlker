@@ -18,7 +18,6 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
 
-          {/* Routes Protégées */}
           <Route
             path="/dashboard"
             element={
@@ -28,7 +27,6 @@ function App() {
             }
           />
           
-          {/* Ajout sécurisé de la route FraisAdd */}
           <Route 
             path="/frais/ajouter" 
             element={

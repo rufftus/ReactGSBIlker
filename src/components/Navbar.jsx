@@ -16,7 +16,6 @@ function Navbar() {
           {user && (
             <>
                 <Link to="/dashboard" className="nav-link">Tableau de bord</Link>
-                {/* Lien corrigé avec la bonne classe CSS */}
                 <Link to="/frais/ajouter" className="nav-link">Ajouter Frais</Link>
             </>
           )}
