@@ -4,32 +4,42 @@ import axios from "axios";
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom'; 
 import "../styles/FraisTable.css";
+import {useParams} from 'react-router-dom';
 
 function FraisTable() {
   const { user, token } = useAuth();
   const navigate = useNavigate();
 
   const [fraisList, setFraisList] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterNonNull, setFilterNonNull] = useState(false); 
   const [minMontant, setMinMontant] = useState("");
 
+  const{id}=useParams();
+  const [loading, setLoading] = useState(true);
+  const[fraiHorsForfaitList,setfraiHorsForfaitList]=useState("")
+
+
   useEffect(() => {
-    const fetchFrais = async () => {
-      try {
-        const response = await axios.get(`${API_URL}frais/liste/${user.id_visiteur}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setFraisList(response.data);
-        setLoading(false);
-      } catch (error) {
-        console.error('Erreur lors de la récupération des frais:', error);
-        setLoading(false);
-      }
-    };
-    fetchFrais(); 
-  }, [user, token]); 
+        const fetchFraisHorsForfaitList = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`http://gsb.julliand.etu.lmdsio.com/api/fraisHF/liste/${id}`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                
+                setLignesFrais(response.data);
+                setLoading(false);
+            } catch (error) {
+                console.error("Erreur chargement frais hors forfait:", error);
+                setLoading(false);
+            }
+        };
+
+        if (id) {
+            fetchFraisHorsForfaitList();
+        }
+    }, [id]);
 
   const handleDelete = async (id) => {
       if (!window.confirm('Êtes-vous sûr de vouloir supprimer ce frais?')) return;
@@ -39,6 +49,7 @@ function FraisTable() {
               headers: { Authorization: `Bearer ${token}` },
               data: { id_frais: id } 
           });
+          
           
           setFraisList(fraisList.filter((frais) => frais.id_frais !== id));
       } catch (error) {
@@ -50,12 +61,12 @@ function FraisTable() {
   if (loading) return <div><b>Chargement des frais....</b></div>
 
   const filteredFrais = fraisList
-    .filter((f) => !filterNonNull || f.montantvalide !== null)
+    .filter((f)=>!filterNonNull || f.montantvalide !== null)
     .filter((frais) =>
       frais.anneemois.includes(searchTerm) ||
       frais.id_visiteur.toString().includes(searchTerm))
-    .filter((f) =>
-      minMontant === "" || (f.montantvalide !== null && f.montantvalide > Number(minMontant)));
+    .filter((f)=>
+      minMontant=== "" || (f.montantvalide !== null && f.montantvalide > Number(minMontant)));
 
   return (
     <>
@@ -64,8 +75,7 @@ function FraisTable() {
           <input
             type="checkbox"
             checked={filterNonNull}
-            onChange={(e) => setFilterNonNull(e.target.checked)}
-          />
+            onChange={(e) => setFilterNonNull(e.target.checked)}/>
           Afficher seulement les frais avec un montant validé
         </label>
       </div>
@@ -78,8 +88,7 @@ function FraisTable() {
             placeholder="Ex: 100"
             value={minMontant}
             onChange={(e) => setMinMontant(e.target.value)}
-            min="0"
-          />
+            min="0"/>
         </label>
       </div>
 

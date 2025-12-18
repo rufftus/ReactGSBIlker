@@ -3,6 +3,10 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { API_URL, getCurrentUser } from '../services/authService';
 import '../styles/FraisForm.css'; 
+import { Link } from 'react-router-dom';
+import FraisHorsForfait from './pages/FraisHorsForfait';
+
+
 
 const FraisForm = ({ frais = null }) => {
     const [idFrais, setIdFrais] = useState(null);
@@ -115,6 +119,9 @@ const FraisForm = ({ frais = null }) => {
                         required
                     />
                 </div>
+
+                <Link className="frais-hors-forfait-link" 
+                to={`/frais/${idFrais}/hors-forfait`}>Frais hors forfait</Link>
 
                 <button type="submit" className="btn-submit" disabled={loading}>
                     {loading ? 'Enregistrement...' : (frais ? 'Mettre à jour' : 'Ajouter')}
