@@ -1,27 +1,17 @@
-import { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import {useState } from 'react';
+
 import '../styles/Login.css';
 
 export default function Login() {
-    const [login, setLogin] = useState('');
-    const [password, setPassword] = useState('');
+    const [login, setLogin]= useState('');
+    const [password, setPassword]= useState('');
 
-    const { loginUser } = useAuth();
-    const navigate = useNavigate();
 
-    const handleSubmit = async(e) => {
+    const handleSubmit= async(e) => {
         e.preventDefault();
 
 
-        try{
-            await loginUser(login, password);
-            navigate('/dashboard');
-        }
-        catch(err)
-        {console.error(err);
-         alert("echec de la connexion");
-        }
+        
         
     };
 

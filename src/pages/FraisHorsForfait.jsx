@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, {useState, useEffect} from 'react';
+import {useParams, useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import FraisHorsForfaitTable from '../components/FraisHorsForfaitTable';
 import '../styles/FraisHorsForfait.css';
@@ -22,7 +22,7 @@ const FraisHorsForfait = () => {
 
             setFraisHorsForfaitList(response.data);
 
-            let somme = 0;
+            let somme= 0;
             response.data.forEach((fraisHorsForfait) => {
                 somme += parseFloat(fraisHorsForfait.montant_fraishorsforfait);
             });
@@ -35,7 +35,7 @@ const FraisHorsForfait = () => {
         }
     };
 
-    useEffect(() => {
+    useEffect(()=> {
         if (id) {
             fetchFraisHorsForfaitList();
         }
@@ -55,7 +55,6 @@ const FraisHorsForfait = () => {
             
             <button 
                 className="return-button" 
-                style={{ marginTop: '10px' }}
                 onClick={() => navigate(`/frais/modifier/${id}`)}
             >
                 Retour
