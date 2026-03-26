@@ -47,13 +47,13 @@ function App() {
           
           <Route path="/frais/:id/hors-forfait/modifier/:idHF" 
           element={<PrivateRoute><FraisHorsForfaitEdit /></PrivateRoute>} />
+
+          <Route path="/praticien" element={<PrivateRoute><PraticienRecherche/></PrivateRoute>}/>
+
         </Routes>
 
 
-            <Route path="praticien" element={<PrivateRoute>
-                <PraticienRecherche/>
-            </PrivateRoute>}/>
-
+          
       </BrowserRouter>
     </AuthProvider>
   );
