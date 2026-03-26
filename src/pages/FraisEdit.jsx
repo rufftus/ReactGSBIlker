@@ -13,7 +13,7 @@ const FraisEdit=() => {
         const fetchFrais= async () => {
             try {
                 const token= localStorage.getItem('token');
-                const response= await axios.get(`${API_URL}frais/${id}`, {
+                const response= await axios.get(`${API_URL}frais/liste/${id}`, {
                     headers: {Authorization: `Bearer ${token}`},
                 });
                 setFrais(response.data);
