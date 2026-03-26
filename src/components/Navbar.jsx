@@ -17,6 +17,7 @@ function Navbar() {
             <>
                 <Link to="/dashboard" className="nav-link">Tableau de bord</Link>
                 <Link to="/frais/ajouter" className="nav-link">Ajouter Frais</Link>
+                <Link to="/praticien" className="nav-link">Recherche praticien</Link>
             </>
           )}
         </div>
