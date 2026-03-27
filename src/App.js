@@ -11,6 +11,7 @@ import FraisHorsForfait from './pages/FraisHorsForfait';
 import FraisHorsForfaitAdd from './pages/FraisHorsForfaitAdd';
 import FraisHorsForfaitEdit from './pages/FraisHorsForfaitEdit';
 import PraticienRecherche from "./pages/PraticienRecherche.jsx";
+import TopPraticien from "./pages/TopPraticien.jsx";
 
 function App() {
   return (
@@ -49,6 +50,9 @@ function App() {
           element={<PrivateRoute><FraisHorsForfaitEdit /></PrivateRoute>} />
 
           <Route path="/praticien" element={<PrivateRoute><PraticienRecherche/></PrivateRoute>}/>
+
+          <Route path="/top" element={<PrivateRoute><TopPraticien/></PrivateRoute>}/>
+
 
         </Routes>
 
