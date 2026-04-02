@@ -17,7 +17,7 @@ function PraticienTable() {
   useEffect(()=> {
     const fetchPraticien = async () => {
       try {
-        const response = await axios.get(`${API_URL}praticiens/recherche/${user.id_visiteur}`, {
+        const response = await axios.get(`${API_URL}praticiens/recherche/`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setPraticienList(response.data);
@@ -48,10 +48,9 @@ function PraticienTable() {
 
   if (loading) return <div><b>Chargement des praticiens....</b></div>
 
-  const filteredPraticien = praticienList
-    .filter((p)=> !filterNonNull || p.montantvalide !== null)
-    .filter((praticien)=>
-      praticien.nom_praticien.includes(searchTerm));
+const filteredPraticien = praticienList.filter((praticien) =>
+  praticien.nom_praticien.toLowerCase().includes(searchTerm.toLowerCase())
+);
 
   return (
     <>
@@ -59,7 +58,7 @@ function PraticienTable() {
       <div className="search-container">
         <input
           type="text"
-          placeholder="Rechercher par année-mois..."
+          placeholder="Rechercher par nom de praticien"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)} 
         />
@@ -75,15 +74,18 @@ function PraticienTable() {
               <th>Prenom praticien</th>
               <th>Nom praticien</th>
               <th>Adresse praticien</th>
+              <th>Spécialite</th>
             </tr>
           </thead>
 
           <tbody>
             {filteredPraticien.map((praticien) => (
               <tr key={praticien.id_praticien}>
+                <td>{praticien.id_praticien}</td>
                 <td>{praticien.nom_praticien}</td>
                 <td>{praticien.prenom_praticien}</td>
                 <td>{praticien.adresse_praticien}</td>
+                <td>{praticien.lib_specialite}</td>
                 <td>
                   <button 
                     onClick={() => navigate(`/frais/modifier/${praticien.id_praticien}`)}
