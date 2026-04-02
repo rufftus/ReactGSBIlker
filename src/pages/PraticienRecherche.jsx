@@ -1,64 +1,61 @@
 import React, { useState, useEffect } from "react";
-import {API_URL } from "../services/authService";
+import { API_URL } from "../services/authService";
 import axios from "axios";
-import {useAuth } from '../context/AuthContext';
-import {useNavigate } from 'react-router-dom'; 
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom'; 
 import "../styles/FraisTable.css";
 
 function PraticienTable() {
-  const {user, token }= useAuth();
+  const { token } = useAuth();
   const navigate = useNavigate();
 
-  const [praticienList, setPraticienList]= useState([]);
-  const [loading, setLoading]= useState(true);
-  const [searchTerm, setSearchTerm]= useState("");
-  const [filterNonNull, setFilterNonNull]= useState(false); 
+  const [praticienList, setPraticienList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
 
-  useEffect(()=> {
+  useEffect(() => {
     const fetchPraticien = async () => {
       try {
-        const response = await axios.get(`${API_URL}praticiens/recherche/`, {
+        const response = await axios.get(`${API_URL}praticiens/recherche`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setPraticienList(response.data);
         setLoading(false);
       } catch (error) {
-        console.error('Erreur lors de la récupération de la liste des praticiens:', error);
+        console.error('Erreur lors de la récupération:', error);
         setLoading(false);
       }
     };
     fetchPraticien(); 
-  }, [user, token]); 
+  }, [token]); 
 
-  const handleDelete= async (id) => {
-      if (!window.confirm('Êtes-vous sûr de vouloir supprimer ce praticien?')) return;
-
+  const handleDelete = async (id) => {
+      if (!window.confirm('Supprimer ce praticien ?')) return;
       try {
           await axios.delete(`${API_URL}praticiens/suppr`, {
-              headers: {Authorization: `Bearer ${token}`},
-              data: {id_praticien: id} 
+              headers: { Authorization: `Bearer ${token}` },
+              data: { id_praticien: id } 
           });
-          
-          setPraticienList(praticienList.filter((praticien)=> praticien.id_praticien !== id));
+          setPraticienList(praticienList.filter((p) => p.id_praticien !== id));
       } catch (error) {
-          console.error('Erreur lors de la suppression:', error);
-          alert("Erreur lors de la suppression du praticien");
+          alert("Erreur lors de la suppression");
       }
   };
 
   if (loading) return <div><b>Chargement des praticiens....</b></div>
 
-const filteredPraticien = praticienList.filter((praticien) =>
-  praticien.nom_praticien.toLowerCase().includes(searchTerm.toLowerCase())
-);
+  const filteredPraticien = praticienList.filter((p) => {
+    const search = searchTerm.toLowerCase();
+    const nom = (p.nom_praticien).toLowerCase();    
+    return nom.includes(search);
+  });
 
   return (
     <>
-
       <div className="search-container">
         <input
           type="text"
-          placeholder="Rechercher par nom de praticien"
+          placeholder="Rechercher un praticien..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)} 
         />
@@ -66,37 +63,30 @@ const filteredPraticien = praticienList.filter((praticien) =>
 
       <div className="frais-table-container">
         <h2>Liste des Praticiens</h2>
-
         <table className="frais-table">
           <thead>
             <tr>
               <th>ID</th>
-              <th>Prenom praticien</th>
-              <th>Nom praticien</th>
-              <th>Adresse praticien</th>
-              <th>Spécialite</th>
+              <th>Prénom</th>
+              <th>Nom</th>
+              <th>Adresse</th>
+              <th>Spécialité</th>
+              <th>Actions</th>
             </tr>
           </thead>
-
           <tbody>
-            {filteredPraticien.map((praticien) => (
-              <tr key={praticien.id_praticien}>
-                <td>{praticien.id_praticien}</td>
-                <td>{praticien.nom_praticien}</td>
-                <td>{praticien.prenom_praticien}</td>
-                <td>{praticien.adresse_praticien}</td>
-                <td>{praticien.lib_specialite}</td>
+            {filteredPraticien.map((p, index) => (
+              <tr key={`${p.id_praticien}-${index}`}>
+                <td>{p.id_praticien}</td>
+                <td>{p.prenom_praticien}</td>
+                <td>{p.nom_praticien}</td>
+                <td>{p.adresse_praticien}</td>
+                <td>{p.lib_specialite || 'Généraliste'}</td>
                 <td>
-                  <button 
-                    onClick={() => navigate(`/frais/modifier/${praticien.id_praticien}`)}
-                    className="edit-button">
+                  <button onClick={() => navigate(`/praticien/modifier/${p.id_praticien}`)} className="edit-button">
                     Modifier
                   </button>
-                  
-                  <button 
-                    onClick={() => handleDelete(praticien.id_praticien)}
-                    className="delete-button"
-                    style={{ marginLeft: '5px', backgroundColor: '#dc3545', color: 'white' }}>
+                  <button onClick={() => handleDelete(p.id_praticien)} className="delete-button" style={{ marginLeft: '5px', backgroundColor: '#dc3545', color: 'white' }}>
                     Supprimer
                   </button>
                 </td>
