@@ -28,7 +28,7 @@ function PraticienTable() {
     };
     fetchPraticien(); 
   }, [token]); 
-
+  
   const handleDelete = async (id) => {
       if (!window.confirm('Supprimer ce praticien ?')) return;
       try {
