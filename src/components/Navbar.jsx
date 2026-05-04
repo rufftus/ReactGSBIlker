@@ -1,9 +1,9 @@
 import '../styles/Navbar.css';
-import {Link } from 'react-router-dom';
-import {useAuth } from '../context/AuthContext';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 function Navbar() {
-  const {user, logoutUser}=useAuth();
+  const { user, logoutUser } = useAuth();
 
   return (
     <nav className="navbar">
@@ -12,13 +12,17 @@ function Navbar() {
         <div className="nav-left">
           <span className="logo">GSB Frais</span>
           <Link to="/" className="nav-link">Accueil</Link>
-          
+
           {user && (
             <>
-                <Link to="/dashboard" className="nav-link">Tableau de bord</Link>
-                <Link to="/frais/ajouter" className="nav-link">Ajouter Frais</Link>
-                <Link to="/praticien" className="nav-link">Recherche praticien</Link>
-                <Link to="/top" className="nav-link">Top praticien</Link>
+              <Link to="/dashboard" className="nav-link">Tableau de bord</Link>
+              <Link to="/frais/ajouter" className="nav-link">Ajouter Frais</Link>
+
+              {/* --- Début des liens Mission 7 --- */}
+              <Link to="/praticiens/top" className="nav-link">Top 5 Spécialités</Link>
+              <Link to="/praticiens/specialite" className="nav-link">Par Spécialité</Link>
+              <Link to="/praticiens/recherche" className="nav-link">Recherche & Invitations</Link>
+              {/* --- Fin des liens Mission 7 --- */}
             </>
           )}
         </div>

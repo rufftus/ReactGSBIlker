@@ -10,8 +10,12 @@ import FraisEdit from './pages/FraisEdit.jsx';
 import FraisHorsForfait from './pages/FraisHorsForfait';
 import FraisHorsForfaitAdd from './pages/FraisHorsForfaitAdd';
 import FraisHorsForfaitEdit from './pages/FraisHorsForfaitEdit';
+
+// --- Imports Mission 7 ---
 import PraticienRecherche from "./pages/PraticienRecherche.jsx";
 import TopPraticien from "./pages/TopPraticien.jsx";
+import PraticienSpecialite from "./pages/PraticienSpecialite.jsx";
+import InvitationsGestion from "./pages/InvitationsGestion.jsx";
 
 function App() {
   return (
@@ -22,42 +26,68 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
 
-          <Route path="/dashboard" element=
-          {<PrivateRoute>
-            <Dashboard/>
-            </PrivateRoute>}/>
+          <Route path="/dashboard" element={
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
+          } />
 
-          <Route path="/frais/ajouter" element=
-          {<PrivateRoute>
-            <FraisAdd/>
-          </PrivateRoute>}/>
-          
-          <Route path="/frais/modifier/:id" element=
-          {<PrivateRoute>
-            <FraisEdit/>
-            </PrivateRoute>}/>
+          <Route path="/frais/ajouter" element={
+            <PrivateRoute>
+              <FraisAdd />
+            </PrivateRoute>
+          } />
 
-          <Route path="/frais/:id/hors-forfait" element=
-          {<PrivateRoute>
-            <FraisHorsForfait/>
-            </PrivateRoute>}/>
-          
-          <Route path="/frais/:id/hors-forfait/ajouter" element={<PrivateRoute>
-            <FraisHorsForfaitAdd/>
-            </PrivateRoute>}/>
-          
-          <Route path="/frais/:id/hors-forfait/modifier/:idHF" 
-          element={<PrivateRoute><FraisHorsForfaitEdit /></PrivateRoute>} />
+          <Route path="/frais/modifier/:id" element={
+            <PrivateRoute>
+              <FraisEdit />
+            </PrivateRoute>
+          } />
 
-          <Route path="/praticien" element={<PrivateRoute><PraticienRecherche/></PrivateRoute>}/>
+          <Route path="/frais/:id/hors-forfait" element={
+            <PrivateRoute>
+              <FraisHorsForfait />
+            </PrivateRoute>
+          } />
 
-          <Route path="/top" element={<PrivateRoute><TopPraticien/></PrivateRoute>}/>
+          <Route path="/frais/:id/hors-forfait/ajouter" element={
+            <PrivateRoute>
+              <FraisHorsForfaitAdd />
+            </PrivateRoute>
+          } />
 
+          <Route path="/frais/:id/hors-forfait/modifier/:idHF" element={
+            <PrivateRoute>
+              <FraisHorsForfaitEdit />
+            </PrivateRoute>
+          } />
+
+          {/* --- Routes Mission 7 --- */}
+          <Route path="/praticiens/recherche" element={
+            <PrivateRoute>
+              <PraticienRecherche />
+            </PrivateRoute>
+          } />
+
+          <Route path="/praticiens/specialite" element={
+            <PrivateRoute>
+              <PraticienSpecialite />
+            </PrivateRoute>
+          } />
+
+          <Route path="/praticiens/top" element={
+            <PrivateRoute>
+              <TopPraticien />
+            </PrivateRoute>
+          } />
+
+          <Route path="/invitations/:idPraticien" element={
+            <PrivateRoute>
+              <InvitationsGestion />
+            </PrivateRoute>
+          } />
 
         </Routes>
-
-
-          
       </BrowserRouter>
     </AuthProvider>
   );
