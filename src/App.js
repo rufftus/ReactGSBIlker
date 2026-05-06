@@ -14,7 +14,6 @@ import FraisHorsForfaitEdit from './pages/FraisHorsForfaitEdit';
 // --- Imports Mission 7 ---
 import PraticienRecherche from "./pages/PraticienRecherche.jsx";
 import TopPraticien from "./pages/TopPraticien.jsx";
-import PraticienSpecialite from "./pages/PraticienSpecialite.jsx";
 import InvitationsGestion from "./pages/InvitationsGestion.jsx";
 
 function App() {
@@ -66,12 +65,6 @@ function App() {
           <Route path="/praticiens/recherche" element={
             <PrivateRoute>
               <PraticienRecherche />
-            </PrivateRoute>
-          } />
-
-          <Route path="/praticiens/specialite" element={
-            <PrivateRoute>
-              <PraticienSpecialite />
             </PrivateRoute>
           } />
 

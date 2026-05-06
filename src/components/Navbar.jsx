@@ -20,7 +20,6 @@ function Navbar() {
 
               {/* --- Début des liens Mission 7 --- */}
               <Link to="/praticiens/top" className="nav-link">Top 5 Spécialités</Link>
-              <Link to="/praticiens/specialite" className="nav-link">Par Spécialité</Link>
               <Link to="/praticiens/recherche" className="nav-link">Recherche & Invitations</Link>
               {/* --- Fin des liens Mission 7 --- */}
             </>
