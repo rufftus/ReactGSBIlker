@@ -14,7 +14,6 @@ function InvitationsGestion() {
     const [selectedAct, setSelectedAct] = useState("");
     const [isSpecialiste, setIsSpecialiste] = useState("N");
 
-    // Nouveaux states pour la modification
     const [editingId, setEditingId] = useState(null);
     const [editSpecialiste, setEditSpecialiste] = useState("N");
 
